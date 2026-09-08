@@ -15,26 +15,7 @@ class RolePermissionSeeder extends Seeder{
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Define product permissions
-        Permission::create(['name' => 'view products']);
-        Permission::create(['name' => 'create products']);
-        Permission::create(['name' => 'edit products']);
-        Permission::create(['name' => 'delete products']);
-
-        // Define order permissions
-        Permission::create(['name' => 'view orders']);
-        Permission::create(['name' => 'create orders']);
-        Permission::create(['name' => 'update orders']);
-        Permission::create(['name' => 'cancel orders']);
-
-        // Define user permissions
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'edit users']);
-
-       
-        // Create Admin role and assign all permissions
-        $adminRole = Role::create(['name' => 'admin']);
-        $adminRole->givePermissionTo([
+        $permissions = [
             'view products',
             'create products',
             'edit products',
@@ -47,11 +28,20 @@ class RolePermissionSeeder extends Seeder{
             'edit users',
             'view deliveries',
             'update delivery status',
-        ]);
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+
+       
+        // Create Admin role and assign all permissions
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole->syncPermissions($permissions);
 
         // Create Customer role with limited permissions
-        $customerRole = Role::create(['name' => 'customer','guard_name' => 'api']);
-        $customerRole->givePermissionTo([
+        $customerRole = Role::firstOrCreate(['name' => 'customer']);
+        $customerRole->syncPermissions([
             'view products',
             'view orders',
             'create orders',

@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attribute_values', function (Blueprint $table) {
-             $table->id();
-
-            $table->string('name');
-
+            $table->id();
+            $table->foreignId('attribute_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->string('value');
             $table->timestamps();
         });
     }

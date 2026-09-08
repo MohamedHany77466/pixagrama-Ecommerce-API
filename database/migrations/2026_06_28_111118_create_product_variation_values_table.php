@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unique([
                 'product_variation_id',
                 'attribute_value_id'
-            ]);
+            ], 'variation_attribute_unique');
         });
     }
 

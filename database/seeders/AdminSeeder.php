@@ -18,13 +18,15 @@ class AdminSeeder extends Seeder
         
         $exists = User::where('email', 'admin@site.com')->first();
 
-        if (!$exists) {
-            User::create([
+        if (! $exists) {
+            $exists = User::create([
                 'name' => 'System Admin',
                 'email' => 'admin@site.com',
                 'password' => Hash::make('password123'), 
                 'type' => 'admin',
             ]);
         }
+
+        $exists->assignRole('admin');
     }
 }
